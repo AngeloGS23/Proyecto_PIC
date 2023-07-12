@@ -1,0 +1,677 @@
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 
+                      00002 ; PIC16F877A Configuration Bit Settings
+                      00003 
+                      00004 ; Assembly source line config statements
+                      00005 
+                      00006 #include "p16f877a.inc"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Jan 06 2020
+                      00005 ;  MPASM PIC16F877A processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2020 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      00567         LIST
+                      00007 
+                      00008 ; CONFIG
+                      00009 ; __config 0x3F32
+2007   3F32           00010  __CONFIG _FOSC_HS & _WDTE_OFF & _PWRTE_ON & _BOREN_OFF & _LVP_OFF & _CPD_OFF & _WRT_OFF & _CP_OFF
+                      00011 
+                      00012     
+                      00013         ORG     0
+0000   2???           00014         GOTO    INICIO
+                      00015         ORG     0X0020
+0020                  00016 INICIO
+0020   2???           00017         CALL    LCD_INIT
+0021   3000           00018         MOVLW   .0
+0022   2???           00019         CALL    LCD_LINEA1
+0023   3041           00020         MOVLW   'A'
+0024   2???           00021         CALL    LCD_CARACTER
+0025   304E           00022         MOVLW   'N'
+0026   2???           00023         CALL    LCD_CARACTER
+0027   3047           00024         MOVLW   'G'
+0028   2???           00025         CALL    LCD_CARACTER
+0029   3045           00026         MOVLW   'E'
+002A   2???           00027         CALL    LCD_CARACTER
+002B   304C           00028         MOVLW   'L'
+002C   2???           00029         CALL    LCD_CARACTER
+002D   304F           00030         MOVLW   'O'
+002E   2???           00031         CALL    LCD_CARACTER
+002F   3020           00032         MOVLW   ' '
+0030   2???           00033         CALL    LCD_CARACTER
+0031   3053           00034         MOVLW   'S'
+0032   2???           00035         CALL    LCD_CARACTER
+0033   3041           00036         MOVLW   'A'
+0034   2???           00037         CALL    LCD_CARACTER
+0035   304E           00038         MOVLW   'N'
+0036   2???           00039         CALL    LCD_CARACTER
+0037   3043           00040         MOVLW   'C'
+0038   2???           00041         CALL    LCD_CARACTER
+0039   3048           00042         MOVLW   'H'
+003A   2???           00043         CALL    LCD_CARACTER
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+003B   3045           00044         MOVLW   'E'
+003C   2???           00045         CALL    LCD_CARACTER
+003D   305A           00046         MOVLW   'Z'
+003E   2???           00047         CALL    LCD_CARACTER
+003F   3000           00048         MOVLW   .0
+0040   2???           00049         CALL    LCD_LINEA2
+0041   304C           00050         MOVLW   'L'
+0042   2???           00051         CALL    LCD_CARACTER
+0043   304F           00052         MOVLW   'O'
+0044   2???           00053         CALL    LCD_CARACTER
+0045   304A           00054         MOVLW   'J'
+0046   2???           00055         CALL    LCD_CARACTER
+0047   3041           00056         MOVLW   'A'
+0048   2???           00057         CALL    LCD_CARACTER
+0049   3020           00058         MOVLW   ' '
+004A   2???           00059         CALL    LCD_CARACTER
+004B   3049           00060         MOVLW   'I'
+004C   2???           00061         CALL    LCD_CARACTER
+004D   3044           00062         MOVLW   'D'
+004E   2???           00063         CALL    LCD_CARACTER
+004F   303A           00064         MOVLW   ':'
+0050   2???           00065         CALL    LCD_CARACTER
+0051   3032           00066         MOVLW   '2'
+0052   2???           00067         CALL    LCD_CARACTER
+0053   3035           00068         MOVLW   '5'
+0054   2???           00069         CALL    LCD_CARACTER
+0055   3037           00070         MOVLW   '7'
+0056   2???           00071         CALL    LCD_CARACTER
+0057   3037           00072         MOVLW   '7'
+0058   2???           00073         CALL    LCD_CARACTER
+0059   3032           00074         MOVLW   '2'
+005A   2???           00075         CALL    LCD_CARACTER
+005B   3032           00076         MOVLW   '2'
+005C   2???           00077         CALL    LCD_CARACTER
+                      00078         
+005D                  00079 START
+005D   2???           00080         GOTO    START
+                      00081 #INCLUDE <Libreria.inc> 
+Warning[205]: Found directive in column 1. (CBLOCK)
+                      00001 CBLOCK 0x20
+  00000020            00002 GUARDAR_DATO
+  00000021            00003 COMANDO
+  00000022            00004 DATA_GUARDAR
+  00000023            00005 DATAS
+  00000024            00006 CUENTA
+Warning[205]: Found directive in column 1. (ENDC)
+                      00007 ENDC
+                      00008 
+                      00009 #define RS  PORTC,0
+                      00010 #define E   PORTC,1
+                      00011 #define RW  PORTC,2
+                      00012 
+005E                  00013 LCD_INIT
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+005E   1683           00014     BSF     STATUS,RP0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+005F   0188           00015     CLRF    TRISD ; Configurar puerto D como salida
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0060   0187           00016     CLRF    TRISC ; Configurar puerto C como salida
+0061   1283           00017     BCF     STATUS,RP0
+0062   2???           00018     CALL    Retardo_1ms
+0063   1007           00019     BCF     RS ; Modo Comando
+0064   3030           00020     MOVLW   0x30 ; RD4 RD5 RD6 RD7 -> RD3 AL RD0
+0065   2???           00021     CALL    LCD_CONFIG
+0066   2???           00022     CALL    Retardo_1ms
+0067   3030           00023     MOVLW   0x30
+0068   2???           00024     CALL    LCD_CONFIG
+0069   2???           00025     CALL    Retardo_1ms
+006A   3030           00026     MOVLW   0x30
+006B   2???           00027     CALL    LCD_CONFIG
+006C   2???           00028     CALL    Retardo_1ms
+006D   3020           00029     MOVLW   0x20 ; 4 bits
+006E   2???           00030     CALL    LCD_CONFIG
+006F   2???           00031     CALL    LCD_2LINEAS ; 0x28
+0070   2???           00032     CALL    LCD_DISPLAY ; 0x0C
+0071   2???           00033     CALL    LCD_BORRAR ; 0x01
+0072   2???           00034     CALL    LCD_INCR ; 0x06
+0073   0008           00035     RETURN
+                      00036 
+0074                  00037 LCD_LINEA2
+0074   30C0           00038     MOVLW   0xC0 ; Dirección de la segunda línea
+0075   2???           00039     CALL    LCD_COMANDO
+0076   0008           00040     RETURN
+                      00041 
+0077                  00042 LCD_LINEA1
+0077   3080           00043     MOVLW   0x80 ; Dirección de la primera línea
+0078   2???           00044     CALL    LCD_COMANDO
+0079   0008           00045     RETURN
+                      00046 
+007A                  00047 LCD_DISPLAY
+007A   300C           00048     MOVLW   0x0C ; Encender display sin cursor ni parpadeo
+007B   2???           00049     CALL    LCD_COMANDO
+007C   0008           00050     RETURN
+                      00051 
+007D                  00052 LCD_BORRAR
+007D   3001           00053     MOVLW   0x01 ; Borrar pantalla
+007E   2???           00054     CALL    LCD_COMANDO
+007F   0008           00055     RETURN
+                      00056 
+0080                  00057 LCD_INCR
+0080   3006           00058     MOVLW   0x06 ; Incrementar posición del cursor
+0081   2???           00059     CALL    LCD_COMANDO
+0082   0008           00060     RETURN
+                      00061 
+0083                  00062 LCD_2LINEAS
+0083   3028           00063     MOVLW   0x28 ; Configurar display de 2 líneas
+0084   2???           00064     CALL    LCD_COMANDO
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0085   0008           00065     RETURN
+                      00066 
+0086                  00067 LCD_COMANDO
+0086   00A1           00068     MOVWF   COMANDO ; Guardar comando
+0087   0821           00069     MOVF    COMANDO,W
+0088   2???           00070     CALL    LCD_CONFIG ; Configurar puerto para enviar comando
+0089   0EA1           00071     SWAPF   COMANDO,F ; Intercambiar nibbles
+008A   0821           00072     MOVF    COMANDO,W
+008B   2???           00073     CALL    LCD_CONFIG ; Configurar puerto para enviar comando
+008C   0008           00074     RETURN
+                      00075 
+008D                  00076 LCD_CARACTER
+008D   00A2           00077     MOVWF   DATA_GUARDAR ; Guardar dato/caracter
+008E   1407           00078     BSF     RS ; Modo Caracter
+008F   2???           00079     CALL    LCD_DATOS ; Enviar dato
+0090   0EA2           00080     SWAPF   DATA_GUARDAR,F ; Intercambiar nibbles
+0091   0822           00081     MOVF    DATA_GUARDAR,W
+0092   2???           00082     CALL    LCD_DATOS ; Enviar dato
+0093   0008           00083     RETURN
+                      00084 
+0094                  00085 LCD_DATOS
+0094   39F0           00086     ANDLW   0xF0 ; Máscara para obtener los 4 bits más significativos
+0095   00A3           00087     MOVWF   DATAS ; Guardar los 4 bits más significativos
+0096   1407           00088     BSF     RS ; Modo Caracter
+0097   0808           00089     MOVF    PORTD,W
+0098   390F           00090     ANDLW   0x0F ; Máscara para obtener los 4 bits menos significativos
+Message[305]: Using default destination of 1 (file).
+0099   04A3           00091     IORWF   DATAS ; Combinar con los 4 bits más significativos
+009A   0823           00092     MOVF    DATAS,W
+009B   0088           00093     MOVWF   PORTD ; Enviar dato al puerto D
+009C   2???           00094     CALL    ENABLE ; Generar pulso en pin E
+009D   0008           00095     RETURN
+                      00096 
+009E                  00097 LCD_CONFIG
+009E   39F0           00098     ANDLW   0xF0 ; Máscara para obtener los 4 bits más significativos
+009F   00A0           00099     MOVWF   GUARDAR_DATO ; Guardar los 4 bits más significativos
+00A0   1007           00100     BCF     RS ; Modo Comando
+00A1   0808           00101     MOVF    PORTD,W
+00A2   390F           00102     ANDLW   0x0F ; Máscara para obtener los 4 bits menos significativos
+Message[305]: Using default destination of 1 (file).
+00A3   04A0           00103     IORWF   GUARDAR_DATO ; Combinar con los 4 bits más significativos
+00A4   0820           00104     MOVF    GUARDAR_DATO,W
+00A5   0088           00105     MOVWF   PORTD ; Enviar dato al puerto D
+00A6   2???           00106     CALL    ENABLE ; Generar pulso en pin E
+00A7   0008           00107     RETURN
+                      00108 
+00A8                  00109 ENABLE
+00A8   2???           00110     CALL    Retardo_1ms
+00A9   2???           00111     CALL    Retardo_1ms
+00AA   1487           00112     BSF     E ; Pulso en pin E
+00AB   2???           00113     CALL    Retardo_1ms
+00AC   1087           00114     BCF     E ; Fin de pulso en pin E
+00AD   0008           00115     RETURN
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00116 
+00AE                  00117 Retardo_1ms
+00AE   30FA           00118     MOVLW   .250 ; Retardo de 1 ms
+00AF   00A4           00119     MOVWF   CUENTA ; Inicializar contador
+00B0                  00120 BUCLE
+00B0   0000           00121     NOP     ; No operation (sin operación)
+00B1   0BA4           00122     DECFSZ  CUENTA,F ; Decrementar contador y saltar si es cero
+00B2   2???           00123     GOTO    BUCLE ; Repetir bucle
+00B3   0820           00124     MOVF    GUARDAR_DATO,W ; Recuperar valor guardado
+00B4   0008           00125     RETURN
+3F32                  00082         END
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+BUCLE                             000000B0
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+COMANDO                           00000021
+CREN                              00000004
+CSRC                              00000007
+CUENTA                            00000024
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATAS                             00000023
+DATA_ADDRESS                      00000005
+DATA_GUARDAR                      00000022
+DC                                00000001
+D_A                               00000005
+D_NOT_A                           00000005
+E                                 PORTC,1
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+ENABLE                            000000A8
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+GUARDAR_DATO                      00000020
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+INDF                              00000000
+INICIO                            00000020
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+LCD_2LINEAS                       00000083
+LCD_BORRAR                        0000007D
+LCD_CARACTER                      0000008D
+LCD_COMANDO                       00000086
+LCD_CONFIG                        0000009E
+LCD_DATOS                         00000094
+LCD_DISPLAY                       0000007A
+LCD_INCR                          00000080
+LCD_INIT                          0000005E
+LCD_LINEA1                        00000077
+LCD_LINEA2                        00000074
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RE2                               00000002
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RS                                PORTC,0
+RSEN                              00000001
+RW                                PORTC,2
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+Retardo_1ms                       000000AE
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+START                             0000005D
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+
+MPASM 5.87             PROGRAMAPRINCIPAL.ASM   7-12-2023  17:39:57         PAGE 13
+
+
+
+
+
+Errors   :     0
+Warnings :     2 reported,     0 suppressed
+Messages :     4 reported,     0 suppressed
+
+
